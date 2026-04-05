@@ -1,0 +1,171 @@
+﻿@model List<AromaCoffee.Models.Product>
+@{
+    ViewData["Title"] = "Меню";
+}
+
+            <div style="margin: 20px 0 10px 240px;">
+                <input type="text"
+                       id="menuSearch"
+                       placeholder="Пошук товару..."
+                       style="
+                           width: 600px;
+                           height: 48px;
+                           border-radius: 14px;
+                           font-size: 18px;
+                           padding: 10px 18px;
+                           border: 1px solid #cfc7c1;
+                           box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+                       " />
+            </div>
+
+        <div id="noResultsMessage" style="
+                display:none;
+                text-align:center;
+                margin:30px 0;
+                font-size:26px;
+                color:#6f4e37;
+                font-weight:600;">
+                Нічого не знайдено 😔
+        </div>
+
+<section class="page-section">
+    <h1>Наше меню</h1>
+
+    <div class="toast" id="toastMessage"></div>
+
+    <!-- Гарячі напої -->
+   <div class="menu-block">
+    <h2>Гарячі напої</h2>
+    <div class="menu-grid">
+        @foreach (var item in Model.Where(p => p.Category == "Кава"))
+        {
+            <div class="menu-card" data-name="@item.Name.ToLower()">
+                <img src="@item.ImageUrl" alt="@item.Name" />
+                <h3>@item.Name</h3>
+                <p>@item.Description</p>
+                <span>@item.Price грн</span>
+               <button type="button" class="order-btn" data-id="@item.Id">🛒 Замовити</button>
+            </div>
+        }
+    </div>
+</div>
+
+    <!-- Холодні напої -->
+    <div class="menu-block">
+    <h2>Холодні напої</h2>
+    <div class="menu-grid">
+        @foreach (var item in Model.Where(p => p.Category == "Холодні напої"))
+        {
+            <div class="menu-card" data-name="@item.Name.ToLower()">
+                <img src="@item.ImageUrl" alt="@item.Name" />
+                <h3>@item.Name</h3>
+                <p>@item.Description</p>
+                <span>@item.Price грн</span>
+                <button type="button" class="order-btn" data-id="@item.Id">🛒 Замовити</button>
+            </div>
+        }
+    </div>
+</div>
+
+    <!-- Десерти -->
+    <div class="menu-block">
+    <h2>Десерти</h2>
+    <div class="menu-grid">
+        @foreach (var item in Model.Where(p => p.Category == "Десерти"))
+        {
+            <div class="menu-card" data-name="@item.Name.ToLower()">
+                <img src="@item.ImageUrl" alt="@item.Name" />
+                <h3>@item.Name</h3>
+                <p>@item.Description</p>
+                <span>@item.Price грн</span>
+                <button type="button" class="order-btn" data-id="@item.Id">🛒 Замовити</button>
+            </div>
+        }
+    </div>
+</div>
+
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const orderButtons = document.querySelectorAll(".order-btn");
+        const toastMessage = document.getElementById("toastMessage");
+        const cartCountLink = document.getElementById("cart-count");
+
+        orderButtons.forEach(button => {
+            button.addEventListener("click", async function (e) {
+                e.preventDefault();
+
+                const id = this.dataset.id;
+
+                try {
+                    const response = await fetch("/Home/AddToCartAjax", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: `id=${encodeURIComponent(id)}`
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        if (toastMessage) {
+                            toastMessage.textContent = data.message;
+                            toastMessage.classList.add("show");
+
+                            setTimeout(() => {
+                                toastMessage.classList.remove("show");
+                            }, 3000);
+                        }
+
+                        if (cartCountLink) {
+                            cartCountLink.textContent = `Кошик (${data.cartCount})`;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Помилка:", error);
+                }
+            });
+        });
+
+        const searchInput = document.getElementById("menuSearch");
+        const cards = document.querySelectorAll(".menu-card");
+        const sections = document.querySelectorAll(".menu-block");
+        const noResultsMessage = document.getElementById("noResultsMessage");
+
+        if (!searchInput) return;
+
+        searchInput.addEventListener("input", function () {
+            const value = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const productName = card.getAttribute("data-name") || "";
+
+                if (productName.includes(value)) {
+                    card.style.display = "flex";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            sections.forEach(section => {
+                let hasVisible = false;
+
+                section.querySelectorAll(".menu-card").forEach(card => {
+                    if (card.style.display !== "none") {
+                        hasVisible = true;
+                    }
+                });
+
+                section.style.display = hasVisible ? "block" : "none";
+            });
+
+            if (noResultsMessage) {
+                noResultsMessage.style.display = visibleCount === 0 ? "block" : "none";
+            }
+        });
+    });
+</script>

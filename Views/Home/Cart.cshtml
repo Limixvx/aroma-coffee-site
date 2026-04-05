@@ -1,0 +1,51 @@
+﻿@model List<AromaCoffee.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Кошик";
+}
+
+<section class="page-section">
+    <h1>Кошик</h1>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <p>Кошик порожній</p>
+    }
+    else
+    {
+        decimal total = 0;
+
+        <table class="cart-table">
+            <tr>
+                <th>Фото</th>
+                <th>Назва</th>
+                <th>Кількість</th>
+                <th>Ціна</th>
+                <th>Дії</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                total += item.Price * item.Quantity;
+
+                <tr>
+                    <td>
+                        <img src="@item.Image" alt="@item.Name" class="cart-image" />
+                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Price * item.Quantity).ToString("0.##")) грн</td>
+                    <td>
+                        <a asp-controller="Home" asp-action="IncreaseQuantity" asp-route-id="@item.ProductId" class="cart-btn">+</a>
+                        <a asp-controller="Home" asp-action="DecreaseQuantity" asp-route-id="@item.ProductId" class="cart-btn">-</a>
+                        <a asp-controller="Home" asp-action="RemoveFromCart" asp-route-id="@item.ProductId" class="remove-btn">Видалити</a>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <h3 class="cart-total">Загалом: @total.ToString("0.##") грн</h3>
+        
+        <a asp-controller="Home" asp-action="Checkout" class="order-btn">Оформити замовлення</a>
+    }
+</section>

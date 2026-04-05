@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Контакти";
+}
+
+<div class="page-section contacts-page">
+
+    <div class="contacts-hero">
+        <h1>Контакти</h1>
+        <p>
+            Завітайте до Aroma Coffee або зв’яжіться з нами зручним для вас способом.
+            Ми завжди раді гостям.
+        </p>
+    </div>
+
+    <div class="contacts-grid">
+        <div class="contact-card">
+            <div class="contact-icon">📍</div>
+            <h3>Адреса</h3>
+            <p>м. Рівне, вул. Шкільна, 26</p>
+        </div>
+
+        <div class="contact-card">
+            <div class="contact-icon">📞</div>
+            <h3>Телефон</h3>
+            <p>+380 99 000 00 00</p>
+        </div>
+
+        <div class="contact-card">
+            <div class="contact-icon">✉️</div>
+            <h3>Email</h3>
+            <p>aromacoffee@gmail.com</p>
+        </div>
+    </div>
+
+    <div class="contacts-bottom">
+        <div class="work-hours-card">
+            <h2>Години роботи</h2>
+
+            <div class="work-hours-list">
+                <div class="work-row">
+                    <span>Понеділок – П’ятниця</span>
+                    <strong>08:00 – 21:00</strong>
+                </div>
+
+                <div class="work-row">
+                    <span>Субота</span>
+                    <strong>09:00 – 22:00</strong>
+                </div>
+
+                <div class="work-row">
+                    <span>Неділя</span>
+                    <strong>09:00 – 20:00</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-info-box">
+            <h2>Чекаємо на вас</h2>
+            <p>
+                Aroma Coffee — це місце для теплих зустрічей, ароматної кави
+                та затишних моментів. Завітайте до нас, щоб насолодитися
+                улюбленими напоями та десертами.
+            </p>
+
+            <a asp-controller="Home" asp-action="Menu" class="btn">
+                Переглянути меню
+            </a>
+        </div>
+    </div>
+</div>

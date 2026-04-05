@@ -1,0 +1,45 @@
+﻿@model List<AromaCoffee.Models.Product>
+
+@{
+    ViewData["Title"] = "Адмін-панель";
+}
+
+<section class="page-section">
+    <h1>Адмін-панель</h1>
+
+<div style="display:flex; justify-content:center; gap:20px; margin-top:20px;">
+    <a asp-controller="Admin" asp-action="Orders" class="order-btn">
+        📦 Замовлення
+    </a>
+
+    <a asp-action="Create" class="order-btn">
+        ➕ Додати товар
+    </a>
+</div>
+
+    <table class="cart-table" style="margin-top:20px;">
+        <tr>
+            <th>Фото</th>
+            <th>Назва</th>
+            <th>Ціна</th>
+            <th>Категорія</th>
+            <th>Дії</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@item.ImageUrl" style="width:80px; height:80px; object-fit:cover;" />
+                </td>
+                <td>@item.Name</td>
+                <td>@item.Price грн</td>
+                <td>@item.Category</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">✏️</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">❌</a>
+                </td>
+            </tr>
+        }
+    </table>
+</section>

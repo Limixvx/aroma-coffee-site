@@ -1,0 +1,229 @@
+﻿@model List<AromaCoffee.Models.Order>
+
+@{
+    ViewData["Title"] = "Мої замовлення";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="color:#4e2f23;">Мої замовлення</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            У вас ще немає замовлень.
+        </div>
+    }
+    else
+    {
+        <div class="orders-grid">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var order = Model[i];
+                var number = Model.Count - i;
+
+                <div class="order-card"
+                     onmouseover="this.style.transform='scale(1.01)'; this.style.boxShadow='0 12px 35px rgba(0,0,0,0.25)'"
+                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'">
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        margin-bottom:15px;
+                        flex-wrap:wrap;">
+                        <h4 style="margin:0; display:flex; align-items:center; gap:10px;">
+                            <span style="
+                                background:#4e2f23;
+                                color:white;
+                                padding:6px 12px;
+                                border-radius:12px;
+                                font-size:14px;
+                                font-weight:600;">
+                                №@number
+                            </span>
+
+                            <span style="color:#4e2f23;">
+                                Замовлення
+                            </span>
+                        </h4>
+                    </div>
+
+                    <hr style="margin:15px 0;" />
+
+                    <div style="line-height:1.9;">
+                        <div><strong>Ім’я:</strong> @order.CustomerName</div>
+                        <div><strong>Телефон:</strong> @order.Phone</div>
+
+                        @if (!string.IsNullOrEmpty(order.Address))
+                        {
+                            <div><strong>Адреса:</strong> @order.Address</div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(order.PaymentMethod))
+                        {
+                            <div><strong>Спосіб оплати:</strong> @order.PaymentMethod</div>
+                        }
+
+                        <div><strong>Статус:</strong> @order.Status</div>
+
+                        @if (order.Status == "Нове")
+                        {
+                            <form asp-controller="Home" asp-action="CancelOrder" method="post" style="margin-top:10px;">
+                                <input type="hidden" name="id" value="@order.Id" />
+                                <button type="submit" class="cancel-order-btn">
+                                    ❌ Скасувати замовлення
+                                </button>
+                            </form>
+                        }
+
+                        <div><strong>Загальна сума:</strong> @order.TotalAmount грн</div>
+                    </div>
+
+                    <div style="margin-top:20px;">
+                        <h5 style="color:#4e2f23; margin-bottom:15px;">Склад замовлення</h5>
+
+                        <div style="overflow-x:auto;">
+                            <table class="table" style="
+                                width:100%;
+                                background:white;
+                                border-collapse:collapse;
+                                border-radius:12px;
+                                overflow:hidden;">
+                                <thead style="background-color:#6f4e37; color:white;">
+                                    <tr>
+                                        <th style="padding:12px; width:120px; text-align:center;">Фото</th>
+                                        <th style="padding:12px; text-align:center;">Назва</th>
+                                        <th style="padding:12px; width:120px; text-align:center;">Кількість</th>
+                                        <th style="padding:12px; width:140px; text-align:center;">Ціна</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in order.OrderItems)
+                                    {
+                                        <tr style="vertical-align:middle; border-bottom:1px solid #eee;">
+                                            <td style="padding:16px; text-align:center;">
+                                                <div style="
+                                                    background:#f4efeb;
+                                                    border-radius:12px;
+                                                    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+                                                    padding:12px;
+                                                    display:flex;
+                                                    justify-content:center;
+                                                    align-items:center;
+                                                    min-height:94px;">
+                                                    @if (!string.IsNullOrEmpty(item.ProductImage))
+                                                    {
+                                                        <img src="@item.ProductImage"
+                                                             alt="@item.ProductName"
+                                                             style="width:70px; height:70px; object-fit:cover; border-radius:12px; border:1px solid #ddd;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div style="
+                                                            width:70px;
+                                                            height:70px;
+                                                            background:#eee;
+                                                            border-radius:12px;
+                                                            display:flex;
+                                                            align-items:center;
+                                                            justify-content:center;
+                                                            color:#888;
+                                                            font-size:12px;">
+                                                            Немає фото
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </td>
+
+                                            <td style="padding:16px; text-align:center;">
+                                                <div style="
+                                                    background:#f4efeb;
+                                                    border-radius:12px;
+                                                    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+                                                    padding:12px;
+                                                    min-height:94px;
+                                                    display:flex;
+                                                    align-items:center;
+                                                    justify-content:center;">
+                                                    @item.ProductName
+                                                </div>
+                                            </td>
+
+                                            <td style="padding:16px; text-align:center;">
+                                                <div style="
+                                                    background:#f4efeb;
+                                                    border-radius:12px;
+                                                    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+                                                    padding:12px;
+                                                    min-height:94px;
+                                                    display:flex;
+                                                    align-items:center;
+                                                    justify-content:center;">
+                                                    @item.Quantity
+                                                </div>
+                                            </td>
+
+                                            <td style="padding:16px; text-align:center;">
+                                                <div style="
+                                                    background:#f4efeb;
+                                                    border-radius:12px;
+                                                    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+                                                    padding:12px;
+                                                    min-height:94px;
+                                                    display:flex;
+                                                    align-items:center;
+                                                    justify-content:center;">
+                                                    @item.Price грн
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .orders-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        align-items: start;
+    }
+
+    .order-card {
+        background-color: #faf7f5;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        padding: 25px;
+        margin-bottom: 0;
+        border-left: 10px solid #4e2f23;
+        transition: 0.3s;
+    }
+
+    .cancel-order-btn {
+        background: #c28b5c;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .cancel-order-btn:hover {
+        background: #a87449;
+    }
+
+    @@media (max-width: 992px) {
+        .orders-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

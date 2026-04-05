@@ -1,0 +1,22 @@
+﻿@model AromaCoffee.Models.Product
+
+@{
+    ViewData["Title"] = "Видалити товар";
+}
+
+<section class="page-section">
+    <h1>Видалити товар</h1>
+
+    <h3>Ти впевнена, що хочеш видалити цей товар?</h3>
+
+    <div>
+        <p><strong>@Model.Name</strong></p>
+        <p>@Model.Price грн</p>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="remove-btn">Видалити</button>
+        <a asp-action="Index">Скасувати</a>
+    </form>
+</section>

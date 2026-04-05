@@ -1,0 +1,81 @@
+﻿@using System.Text.Json
+@using AromaCoffee.Models
+
+@{
+    int cartCount = 0;
+
+    var sessionData = Context.Session.GetString("cart");
+
+    if (!string.IsNullOrEmpty(sessionData))
+    {
+        var cart = JsonSerializer.Deserialize<List<CartItem>>(sessionData) ?? new List<CartItem>();
+        cartCount = cart.Sum(x => x.Quantity);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Aroma Coffee</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">Aroma Coffee</div>
+        <ul class="nav-links">
+            <li><a asp-controller="Home" asp-action="Index">Головна</a></li>
+            <li><a asp-controller="Home" asp-action="Menu">Меню</a></li>
+            <li><a asp-controller="Home" asp-action="Cart" id="cart-count">Кошик (@cartCount)</a></li>
+            <li class="nav-item">
+    <a class="nav-link" asp-controller="Home" asp-action="MyOrders">Мої замовлення</a>
+</li>
+            <li><a asp-controller="Home" asp-action="About">Про нас</a></li>
+            <li><a asp-controller="Home" asp-action="Contact">Контакти</a></li>
+
+             @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <li>
+            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                <button type="submit" style="background:none; border:none; color:white; cursor:pointer;">
+                    Вийти
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li>
+            <a asp-controller="Account" asp-action="Login">Вхід</a>
+        </li>
+        <li>
+            <a asp-controller="Account" asp-action="Register">Реєстрація</a>
+        </li>
+    }
+
+    @if (User.IsInRole("Admin"))
+{
+    <li>
+        <a asp-controller="Admin" asp-action="Index">Адмін</a>
+    </li>
+}
+
+        </ul>
+    </nav>
+</header>
+
+<main>
+    @RenderBody()
+</main>
+
+<footer>
+    <p>© 2026 Aroma Coffee</p>
+</footer>
+
+        @RenderSection("Scripts", required: false)
+
+</body>
+</html>

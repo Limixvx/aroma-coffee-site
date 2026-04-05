@@ -1,0 +1,56 @@
+﻿@model AromaCoffee.Models.Product
+
+@{
+    ViewData["Title"] = "Додати товар";
+}
+
+<section class="page-section">
+    <h1>Додати товар</h1>
+
+    <form asp-action="Create" method="post" class="auth-form">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Name">Назва</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Опис</label>
+            <input asp-for="Description" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price">Ціна</label>
+            <input asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl">Шлях до зображення</label>
+            <input asp-for="ImageUrl" class="form-control" placeholder="/images/new-product.jpg" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Category">Категорія</label>
+            <select asp-for="Category" class="form-control">
+                <option value="">-- Обери категорію --</option>
+                <option value="Кава">Кава</option>
+                <option value="Холодні напої">Холодні напої</option>
+                <option value="Десерти">Десерти</option>
+            </select>
+        </div>
+
+        <div class="form-group form-check">
+            <input asp-for="IsAvailable" class="form-check-input" />
+            <label asp-for="IsAvailable" class="form-check-label">Доступний</label>
+        </div>
+
+        <button type="submit" class="order-btn">Зберегти</button>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
